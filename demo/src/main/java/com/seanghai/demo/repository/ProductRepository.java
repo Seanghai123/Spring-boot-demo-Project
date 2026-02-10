@@ -9,10 +9,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository <Product,Long>{
 
-//   CONCAT => concatenate
-//   CONCAT ('%',':name','%') => "%" + :name + "%"
-    @Query("select p from Product p where: name is null or lower (p.productName) like %:name%")
-    List <Product> findProductsWithFillters(@Param("name") String name);
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    @Query("SELECT p FROM Product p WHERE " +
+            "(:name IS NULL OR LOWER(p.productName) LIKE %:name%) AND " +
+            "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
+            "(:maxPrice IS NULL OR p.price <= :maxPrice)")
+    List<Product> findProductsWithFillters(
+            @Param("name") String name,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice
+    );
 }

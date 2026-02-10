@@ -80,10 +80,12 @@ public class ProductService {
                 .body(new BaseResposeModel("Successfully Delete product", "success"+productId));
     }
 
-    public ResponseEntity<BaseResposeWithDataModel>searchProducts(String name){
+    public ResponseEntity<BaseResposeWithDataModel>searchProducts(String name, Double minPrice, Double maxPrice){
      // ternery operator
-        String formattedName = name !=null ? name.toLowerCase() : name;
-        List <Product> product = productRepository.findProductsWithFillters(formattedName);
+        String formattedName = name !=null ?
+                name.toLowerCase()
+                : name;
+        List <Product> product = productRepository.findProductsWithFillters(formattedName, minPrice, maxPrice);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResposeWithDataModel("success", "successfully retrieve product", product));
     }
