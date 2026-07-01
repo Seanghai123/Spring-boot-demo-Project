@@ -1,13 +1,14 @@
-package com.seanghai.demo.model;
+package com.seanghai.demo.dto;
 
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserModel {
+public class UserDto {
     private Long id;
-    private String name;// ← ADD THIS
+    private String name;// ← ADD THIS\
+    private String password;
     private Integer age;
     private String address;
     private String email;

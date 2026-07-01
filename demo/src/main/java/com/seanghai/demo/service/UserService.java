@@ -1,9 +1,11 @@
 package com.seanghai.demo.service;
 
+import com.seanghai.demo.dto.UserResponseDto;
 import com.seanghai.demo.enitity.User;
+import com.seanghai.demo.mapper.UserMapper;
 import com.seanghai.demo.model.BaseResposeModel;
 import com.seanghai.demo.model.BaseResposeWithDataModel;
-import com.seanghai.demo.model.UserModel;
+import com.seanghai.demo.dto.UserDto;
 import com.seanghai.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,35 +22,34 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserMapper mapper;
 
-    private List<UserModel> users = new ArrayList<>(Arrays.asList(new UserModel(1l, "Seang hai", 23, "pp","","")));
 
 
     public ResponseEntity<BaseResposeWithDataModel> ListUsers(){
 //        បង្កើត List ហៅ User ពី package enitity ដើម្បី get data ពី database ដោយប្រើ findAll method ដែរមានស្រាប់
-        List<User> userData = userRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+        List<UserResponseDto> dtos = mapper.toDtoList(users);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResposeWithDataModel("success", "successfully retrieve user", userData));
+                .body(new BaseResposeWithDataModel("success", "successfully retrieve user", dtos));
     }
     public ResponseEntity<BaseResposeWithDataModel> getUser(Long userID){
+
+
+
         Optional<User> user = userRepository.findById(userID);
         if(user.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new BaseResposeWithDataModel("Fail","user not found with ID"+userID,null));
         }
+        UserResponseDto dto = mapper.toDto(user.get( ));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResposeWithDataModel("success","successfully retrieve user",user.get()));
     }
-    public ResponseEntity<BaseResposeModel> createUser(UserModel payload) {
-        User user = new User(); // Correct class and variable usage
-
-        user.setName(payload.getName());
-        user.setAddress(payload.getAddress());
-        user.setAge(payload.getAge());
-        user.setEmail(payload.getEmail());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setRole(payload.getRole());
-
+    public ResponseEntity<BaseResposeModel> createUser(UserDto payload) {
+        User user = mapper.toEntity(payload);
         userRepository.save(user);
 
         return ResponseEntity
@@ -56,7 +57,7 @@ public class UserService {
                 .body(new BaseResposeModel("Successfully created user", "success"));
     }
 
-    public ResponseEntity<BaseResposeModel> updateUser(UserModel payload, Long userId){
+    public ResponseEntity<BaseResposeModel> updateUser(UserDto payload, Long userId){
         Optional<User> exisiting = userRepository.findById(userId);
 //        isEmpty រកមិនឃើញ
 //        if user not found , then response 404
@@ -75,12 +76,9 @@ public class UserService {
 //        user found
 //        id input 100 , it will create new user-> 101
 //        update user
-        User updatedUser = exisiting.get();
-        updatedUser.setEmail(payload.getEmail());
-        updatedUser.setName(payload.getName());
-        updatedUser.setAge(payload.getAge());
-        updatedUser.setAddress(payload.getAddress());
-        updatedUser.setRole(payload.getRole());
+        User updatedUser  = exisiting.get();
+        mapper.updateEntityFromDto(updatedUser,payload);
+
         userRepository.save(updatedUser);
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -1,6 +1,7 @@
 package com.seanghai.demo.service;
 
 import com.seanghai.demo.enitity.Product;
+import com.seanghai.demo.mapper.UserMapper;
 import com.seanghai.demo.model.BaseResposeModel;
 import com.seanghai.demo.model.ProductModel;
 import com.seanghai.demo.model.BaseResposeWithDataModel;
@@ -21,7 +22,10 @@ public class ProductService {
     private BaseResposeWithDataModel productResposeModel;
     @Autowired
     private ProductRepository productRepository;
-    private List<ProductModel> products = new ArrayList<>(Arrays.asList(new ProductModel(1l, "product 1", 100.0, "product 1 description")));
+
+
+    private List<ProductModel> products = new ArrayList<>(Arrays.asList
+            (new ProductModel(1l, "product 1", 100.0, "product 1 description")));
 
     public ResponseEntity<BaseResposeWithDataModel> ListProducts(){
 

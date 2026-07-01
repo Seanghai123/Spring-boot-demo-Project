@@ -2,7 +2,7 @@ package com.seanghai.demo.controller;
 
 import com.seanghai.demo.model.BaseResposeModel;
 import com.seanghai.demo.model.BaseResposeWithDataModel;
-import com.seanghai.demo.model.UserModel;
+import com.seanghai.demo.dto.UserDto;
 import com.seanghai.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +29,12 @@ public class TestController {
     // used for creating/inserting record
     // request body can be called request payload or shortcut "payload"
     @PostMapping()
-    public ResponseEntity<BaseResposeModel> createUser(@RequestBody UserModel payload) {
+    public ResponseEntity<BaseResposeModel> createUser(@RequestBody UserDto payload) {
      return userService.createUser(payload) ;
     }
 
     @PutMapping("/{user_id}")
-    public ResponseEntity<BaseResposeModel> updateUser(@PathVariable("user_id") Long userId, @RequestBody UserModel payload) {
+    public ResponseEntity<BaseResposeModel> updateUser(@PathVariable("user_id") Long userId, @RequestBody UserDto payload) {
         return userService.updateUser(payload,userId);
     }
     @DeleteMapping("/{user_id}")
