@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 //JpaRepository វាទទួលយក ២ ទី១ Enitity មួយទៀតជា Type  របស់ ID
 @Repository
 public interface UserRepository extends JpaRepository <User , Long>{
-
+ boolean existsByName (String username);
+ boolean existsByEmail ( String email);
 }

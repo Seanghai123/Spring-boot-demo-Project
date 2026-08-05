@@ -49,6 +49,15 @@ public class UserService {
                 .body(new BaseResposeWithDataModel("success","successfully retrieve user",user.get()));
     }
     public ResponseEntity<BaseResposeModel> createUser(UserDto payload) {
+        //validate if username is existed
+         if(userRepository.existsByName(payload.getName())){
+             return  ResponseEntity.status(HttpStatus.CONFLICT)
+                     .body(new BaseResposeModel("fail","username is already existed"));
+         }
+         //validate if email is existed
+        if(userRepository.existsByEmail(payload.getEmail())){
+            return  ResponseEntity.status(HttpStatus.CONFLICT).body(new BaseResposeModel("fail","email is already existed"));
+        }
         User user = mapper.toEntity(payload);
         userRepository.save(user);
 
